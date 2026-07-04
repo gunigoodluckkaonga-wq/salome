@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Heart of My Chikala 💜</title>
+<style>
+/* ============================================================
+   PROJECT INFINITY — "THE HEART OF MY CHIKALA"
+   Single-file cinematic love experience. No external libraries.
+   ============================================================ */
+:root{
+  --deep-purple:#22084a;
+  --royal-purple:#6c2bd9;
+  --lavender:#d9c6ff;
+  --violet:#9b5cf6;
+  --midnight:#060110;
+  --soft-white:#f8f4ff;
+  --pink:#f5a8d6;
+  --gold:#f3c98b;
+  --glow:#b48cff;
+  --font-display:Georgia,'Times New Roman',serif;
+  --font-script:'Brush Script MT','Segoe Script',cursive;
+  --font-body:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--midnight);
+  color:var(--soft-white);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  position:relative;
+  -webkit-tap-highlight-color:transparent;
+}
+::selection{background:var(--violet);color:#fff;}
+button{font-family:inherit;}
+.display{font-family:var(--font-display);}
+.script{font-family:var(--font-script);}
+.glow{ text-shadow:0 0 14px var(--glow),0 0 34px rgba(180,140,255,.55); }
+.hidden{display:none !important;}
+.sr-only{position:absolute;left:-9999px;}
+
+/* ---------------- persistent backdrop ---------------- */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.fog{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,rgba(34,8,74,.25) 60%,rgba(6,1,16,.55) 100%);
+  mix-blend-mode:screen;
+}
+.aurora{
+  position:fixed;inset:-10%;z-index:1;pointer-events:none;filter:blur(26px);mix-blend-mode:screen;
+  background:
+    radial-gradient(ellipse 70% 45% at 15% 0%,rgba(107,43,217,.4),transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 5%,rgba(245,168,214,.22),transparent 60%),
+    radial-gradient(ellipse 55% 45% at 50% 105%,rgba(34,8,74,.7),transparent 60%);
+  animation:auroraShift 16s ease-in-out infinite alternate;
+}
+@keyframes auroraShift{0%{opacity:.7;transform:translateY(0) scale(1);}100%{opacity:1;transform:translateY(-2%) scale(1.06);}}
+
+#moon{
+  position:fixed;top:6%;right:8%;width:110px;height:110px;border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,#fff,#e6d7ff 45%,#b39ce0 100%);
+  box-shadow:0 0 60px 18px rgba(180,140,255,.5),0 0 140px 55px rgba(107,43,217,.22);
+  animation:moonFloat 11s ease-in-out infinite;
+  transition:background 2.5s ease,box-shadow 2.5s ease;
+}
+#moon::before,#moon::after{content:'';position:absolute;border-radius:50%;background:rgba(150,120,190,.32);}
+#moon::before{width:20px;height:20px;top:22px;left:18px;}
+#moon::after{width:13px;height:13px;top:60px;left:56px;}
+@keyframes moonFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+.float-layer{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+.drift{position:absolute;opacity:0;will-change:transform,opacity;animation-name:driftUp;animation-timing-function:ease-in;animation-iteration-count:infinite;}
+@keyframes driftUp{
+  0%{opacity:0;transform:translateY(112vh) translateX(0) rotate(0deg);}
+  10%{opacity:.9;}90%{opacity:.6;}
+  100%{opacity:0;transform:translateY(-8vh) translateX(50px) rotate(30deg);}
+}
+.firefly{position:absolute;width:5px;height:5px;border-radius:50%;background:#ffe9a8;box-shadow:0 0 8px 3px rgba(255,233,168,.9);animation-name:fireflyMove;animation-timing-function:ease-in-out;animation-iteration-count:infinite;}
+@keyframes fireflyMove{0%{transform:translate(0,0);opacity:.2;}25%{opacity:1;}50%{transform:translate(30px,-40px);opacity:.4;}75%{opacity:.9;}100%{transform:translate(-20px,-90px);opacity:0;}}
+
+/* cursor heart trail */
+.trail-heart{position:fixed;z-index:998;pointer-events:none;font-size:14px;opacity:.9;animation:trailFade .9s ease forwards;}
+@keyframes trailFade{to{opacity:0;transform:translateY(-30px) scale(.4);}}
+
+/* ---------------- layout ---------------- */
+section{position:relative;z-index:3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vh 6vw;text-align:center;}
+.glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:22px;backdrop-filter:blur(16px);box-shadow:0 8px 40px rgba(34,8,74,.5),inset 0 0 40px rgba(155,92,246,.08);}
+.section-title{font-size:clamp(1.7rem,4vw,2.5rem);margin-bottom:8px;}
+.section-sub{font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--lavender);max-width:520px;margin-bottom:18px;}
+
+/* ---------------- cinematic intro ---------------- */
+#intro{
+  position:fixed;inset:0;z-index:1000;background:#000;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;transition:opacity 1.6s ease,visibility 1.6s ease;overflow:hidden;
+}
+#intro.fade-out{opacity:0;visibility:hidden;}
+.intro-heartbeat-ring{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--violet);
+  box-shadow:0 0 20px 6px var(--glow);opacity:0;
+}
+.intro-heart{
+  width:0;height:0;position:relative;opacity:0;transition:width 2.4s cubic-bezier(.2,.7,.2,1),height 2.4s cubic-bezier(.2,.7,.2,1),opacity 1s ease;
+}
+.intro-heart.grow{width:60px;height:60px;opacity:1;}
+.intro-heart::before,.intro-heart::after{
+  content:'';position:absolute;width:50%;height:80%;border-radius:50% 50% 0 0;background:radial-gradient(circle at 35% 30%,#fff,var(--pink) 45%,var(--royal-purple) 100%);
+  box-shadow:0 0 40px 14px rgba(180,140,255,.7);
+}
+.intro-heart::before{left:50%;transform:rotate(-45deg);transform-origin:0 100%;}
+.intro-heart::after{left:0;transform:rotate(45deg);transform-origin:100% 100%;}
+.intro-heart.burst{animation:heartBurst .7s ease forwards;}
+@keyframes heartBurst{to{transform:scale(3.5);opacity:0;}}
+.intro-text{
+  font-family:var(--font-display);font-style:italic;font-size:clamp(1.1rem,3vw,1.7rem);color:var(--lavender);
+  max-width:640px;min-height:2.4em;margin-top:26px;opacity:0;transition:opacity .8s ease;position:relative;z-index:2;
+}
+.intro-text.show{opacity:1;}
+.intro-title{
+  font-family:var(--font-display);font-size:clamp(1.6rem,5vw,3rem);opacity:0;transform:scale(.85);
+  transition:opacity 1.6s ease,transform 1.6s ease;text-align:center;position:relative;z-index:2;
+}
+.intro-title.show{opacity:1;transform:scale(1);}
+.intro-skip{
+  position:absolute;bottom:26px;right:26px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);
+  color:#fff;padding:10px 18px;border-radius:30px;cursor:pointer;font-size:.85rem;z-index:5;
+}
+
+/* ---------------- hero ---------------- */
+#hero{gap:20px;}
+.hero-eyebrow{font-family:var(--font-display);font-style:italic;color:var(--lavender);opacity:0;animation:fadeSlow 1.6s ease forwards .2s;}
+.hero-title{
+  font-size:clamp(2rem,6vw,3.6rem);background:linear-gradient(90deg,var(--lavender),#fff,var(--pink));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-lead{max-width:600px;font-family:var(--font-display);font-style:italic;font-size:clamp(1rem,2.2vw,1.3rem);line-height:1.7;opacity:0;animation:fadeSlow 1.6s ease forwards .6s;}
+@keyframes fadeSlow{to{opacity:1;}}
+.cta-btn{
+  margin-top:12px;padding:15px 34px;font-size:1rem;font-weight:600;letter-spacing:.4px;color:#fff;cursor:pointer;
+  border:1px solid rgba(217,198,255,.5);border-radius:50px;background:rgba(107,43,217,.25);backdrop-filter:blur(10px);
+  box-shadow:0 0 22px rgba(155,92,246,.55);transition:transform .3s ease,box-shadow .3s ease;
+}
+.cta-btn:hover,.cta-btn:focus-visible{transform:translateY(-3px) scale(1.04);box-shadow:0 0 42px rgba(155,92,246,.85);}
+.scroll-hint{margin-top:30px;font-size:.85rem;color:var(--lavender);opacity:.75;animation:bob 2.2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+/* ---------------- chapters ---------------- */
+.chapter{max-width:680px;}
+.chapter-num{font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1rem;margin-bottom:6px;opacity:.85;}
+.chapter-title{font-size:clamp(1.6rem,4vw,2.4rem);margin-bottom:18px;}
+.chapter-text{font-family:var(--font-display);font-size:clamp(1.05rem,2.2vw,1.3rem);line-height:1.85;opacity:0;transform:translateY(18px);transition:opacity 1s ease,transform 1s ease;}
+.chapter.in-view .chapter-text{opacity:1;transform:translateY(0);}
+.chapter-icon{font-size:2.2rem;margin-bottom:14px;opacity:0;transform:scale(.5);transition:opacity .8s ease,transform .8s ease;}
+.chapter.in-view .chapter-icon{opacity:1;transform:scale(1);}
+.rose-bloom{display:inline-block;transition:transform .6s ease;}
+.chapter.in-view .rose-bloom{transform:scale(1.3) rotate(8deg);}
+
+/* ---------------- love letter ---------------- */
+#letter-scene{gap:0;}
+.envelope-stage{position:relative;width:min(90vw,360px);height:240px;perspective:1000px;}
+.envelope{
+  position:absolute;inset:0;transform:translateY(-160vh) rotate(-8deg);opacity:0;
+  transition:transform 1.6s cubic-bezier(.2,.7,.2,1),opacity 1s ease;
+}
+.envelope.arrive{transform:translateY(0) rotate(0deg);opacity:1;}
+.envelope-body{
+  position:absolute;inset:0;border-radius:10px;background:linear-gradient(160deg,#3a1868,#22084a);
+  box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(155,92,246,.4);
+}
+.envelope-flap{
+  position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(160deg,#4a2080,#2d0b59);
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform 1s ease .3s;
+}
+.envelope.open .envelope-flap{transform:rotateX(180deg);}
+.wax-seal{
+  position:absolute;left:50%;top:38%;width:44px;height:44px;border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 35% 30%,var(--pink),var(--royal-purple));
+  box-shadow:0 0 20px rgba(245,168,214,.7);display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  transition:transform .8s ease,opacity .8s ease;z-index:3;
+}
+.envelope.open .wax-seal{transform:translate(-50%,-50%) scale(0);opacity:0;}
+.letter-paper{
+  max-width:640px;width:92vw;margin-top:26px;padding:44px 38px;
+  transform:scaleY(.04);opacity:0;transform-origin:top center;
+  transition:transform 1.2s cubic-bezier(.2,.8,.2,1),opacity 1.2s ease;
+}
+.letter-paper.open{transform:scaleY(1);opacity:1;}
+.letter-text{font-family:var(--font-display);font-size:1.12rem;line-height:1.9;text-align:left;white-space:pre-wrap;min-height:8em;}
+.type-cursor{display:inline-block;width:2px;background:var(--lavender);animation:blink 1s step-end infinite;margin-left:1px;}
+@keyframes blink{50%{opacity:0;}}
+.letter-sign{font-family:var(--font-script);font-size:1.9rem;color:var(--lavender);margin-top:14px;display:block;text-align:left;}
+
+/* ---------------- game hub ---------------- */
+#games{max-width:900px;}
+.game-tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px;}
+.game-tab{
+  padding:10px 18px;border-radius:30px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);
+  color:#fff;cursor:pointer;font-size:.9rem;transition:background .3s ease,transform .3s ease;
+}
+.game-tab.active{background:linear-gradient(120deg,var(--royal-purple),var(--pink));border-color:transparent;transform:translateY(-2px);}
+.game-panel{display:none;width:100%;padding:30px 24px;min-height:340px;}
+.game-panel.active{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.game-title{font-size:1.3rem;margin-bottom:4px;}
+.game-msg{font-family:var(--font-display);font-style:italic;color:var(--lavender);min-height:1.6em;}
+
+/* RPS */
+.rps-choices{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.rps-choices button{
+  font-size:2rem;width:70px;height:70px;border-radius:50%;border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.07);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;
+}
+.rps-choices button:hover{transform:translateY(-4px) scale(1.08);box-shadow:0 0 22px rgba(155,92,246,.6);}
+.rps-score{display:flex;gap:26px;font-family:var(--font-display);}
+
+/* memory */
+.memory-grid{display:grid;grid-template-columns:repeat(4,64px);gap:10px;}
+.memory-card{
+  width:64px;height:64px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;transition:transform .3s ease,background .3s ease;
+  user-select:none;
+}
+.memory-card.flipped{background:rgba(155,92,246,.35);}
+.memory-card.matched{background:rgba(245,168,214,.35);cursor:default;}
+
+/* catch the heart */
+.catch-stage{position:relative;width:100%;max-width:520px;height:280px;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.15);}
+.catch-heart{position:absolute;font-size:1.6rem;cursor:pointer;animation:catchFloat linear forwards;background:none;border:none;}
+@keyframes catchFloat{from{transform:translateY(0);}to{transform:translateY(-260px);}}
+.catch-hud{display:flex;gap:26px;font-family:var(--font-display);}
+
+/* hidden rose */
+.rose-grid{display:grid;gap:8px;}
+.rose-tile{
+  width:52px;height:52px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+  cursor:pointer;font-size:1.3rem;display:flex;align-items:center;justify-content:center;transition:background .25s ease,transform .2s ease;
+}
+.rose-tile.found{background:rgba(245,168,214,.4);}
+.rose-diff{display:flex;gap:10px;}
+.rose-diff button{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;}
+.rose-diff button.active{background:var(--royal-purple);}
+
+/* wheel */
+.wheel-wrap{position:relative;width:220px;height:220px;}
+.wheel{
+  width:100%;height:100%;border-radius:50%;position:relative;transition:transform 3.2s cubic-bezier(.15,.9,.15,1);
+  background:conic-gradient(var(--royal-purple) 0deg 45deg,var(--violet) 45deg 90deg,var(--pink) 90deg 135deg,var(--lavender) 135deg 180deg,var(--royal-purple) 180deg 225deg,var(--violet) 225deg 270deg,var(--pink) 270deg 315deg,var(--lavender) 315deg 360deg);
+  box-shadow:0 0 40px rgba(155,92,246,.5);
+}
+.wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:1.4rem;}
+.wheel-btn{margin-top:16px;}
+
+/* quiz */
+.quiz-q{font-family:var(--font-display);font-size:1.1rem;margin-bottom:12px;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;width:100%;max-width:380px;}
+.quiz-opts button{padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;text-align:left;}
+.quiz-opts button.correct{background:rgba(155,92,246,.5);}
+.quiz-opts button.wrong{background:rgba(245,90,120,.3);}
+
+.small-btn{padding:10px 22px;border-radius:30px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-size:.9rem;}
+.small-btn.primary{background:linear-gradient(120deg,var(--royal-purple),var(--pink));border:none;}
+
+/* ---------------- secrets ---------------- */
+.secret-counter{position:fixed;top:18px;left:18px;z-index:800;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);padding:8px 14px;border-radius:20px;font-size:.8rem;}
+.secret-token{position:absolute;pointer-events:auto;cursor:pointer;font-size:1.3rem;filter:drop-shadow(0 0 8px rgba(180,140,255,.7));animation:secretPulse 2.4s ease-in-out infinite;background:none;border:none;}
+@keyframes secretPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);z-index:900;
+  padding:14px 26px;border-radius:30px;background:rgba(34,8,74,.9);border:1px solid rgba(255,255,255,.25);
+  font-family:var(--font-display);font-style:italic;opacity:0;transition:opacity .5s ease,transform .5s ease;text-align:center;max-width:80vw;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ---------------- music toggle ---------------- */
+#music-toggle{
+  position:fixed;top:18px;right:18px;z-index:800;width:46px;height:46px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);
+  color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------------- finale ---------------- */
+#finale{
+  min-height:140vh;flex-direction:column;gap:16px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#150732 0%,#42206f 30%,#a9557e 62%,#f3a86b 100%);
+}
+.finale-canvas{position:absolute;inset:0;z-index:0;}
+.bird{position:absolute;font-size:1rem;opacity:.85;animation-name:flyAcross;animation-timing-function:linear;animation-iteration-count:infinite;z-index:1;}
+@keyframes flyAcross{from{transform:translateX(-10vw);}to{transform:translateX(110vw);}}
+.finale-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.crystal-heart{width:170px;height:170px;position:relative;margin:20px 0;animation:heartBeatSlow 2.6s ease-in-out infinite;opacity:0;transform:scale(.6);transition:opacity 1.4s ease,transform 1.4s ease;}
+.crystal-heart.show{opacity:1;transform:scale(1);}
+@keyframes heartBeatSlow{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.crystal-heart::before,.crystal-heart::after{
+  content:'';position:absolute;width:50%;height:80%;border-radius:50% 50% 0 0;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--pink) 40%,var(--royal-purple) 100%);
+  box-shadow:0 0 55px 18px rgba(245,168,214,.6);
+}
+.crystal-heart::before{left:50%;transform:rotate(-45deg);transform-origin:0 100%;}
+.crystal-heart::after{left:0;transform:rotate(45deg);transform-origin:100% 100%;}
+.crystal-label{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-script);font-size:1rem;color:#2d0b3f;white-space:nowrap;}
+.finale-text{font-family:var(--font-display);font-style:italic;font-size:clamp(1.05rem,2.6vw,1.35rem);max-width:560px;opacity:0;transition:opacity 1.2s ease;}
+.finale-text.show{opacity:1;}
+.finale-forever{font-size:1.7rem;margin-top:6px;opacity:0;transition:opacity 1.2s ease;}
+.finale-forever.show{opacity:1;}
+.finale-credit{font-size:.85rem;opacity:0;margin-top:22px;transition:opacity 1.2s ease;}
+.finale-credit.show{opacity:.85;}
+
+@media(max-width:640px){
+  #moon{width:76px;height:76px;top:4%;right:6%;}
+  .memory-grid{grid-template-columns:repeat(4,58px);}
+  .memory-card{width:58px;height:58px;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ CINEMATIC INTRO ============ -->
+<div id="intro">
+  <div class="intro-heart" id="intro-heart"></div>
+  <div class="intro-text" id="intro-text"></div>
+  <div class="intro-title" id="intro-title">💜 TO MY BEAUTIFUL GIRLFRIEND "CHIKALA CHILEBE NZELU" 💜</div>
+  <button class="intro-skip" id="intro-skip">Skip intro</button>
+</div>
+
+<!-- ============ PERSISTENT BACKDROP ============ -->
+<canvas id="bg-canvas"></canvas>
+<div class="aurora"></div>
+<div class="fog"></div>
+<div id="moon"></div>
+<div class="float-layer" id="float-layer"></div>
+
+<div class="secret-counter" id="secret-counter">💜 Secrets found: 0 / 6</div>
+<button id="music-toggle" aria-label="Toggle ambient music" title="Soft ambient music">🎵</button>
+<div class="toast" id="toast"></div>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-eyebrow display">A love story, written for you</div>
+  <h1 class="hero-title display glow">To My Beautiful Chikala</h1>
+  <p class="hero-lead">We're only on the second day of our four-day holiday, and it already feels like something important is missing... and that's you.</p>
+  <button class="cta-btn" id="start-journey">💜 Begin Our Story</button>
+  <div class="scroll-hint">scroll to continue ↓</div>
+</section>
+
+<!-- ============ CHAPTERS ============ -->
+<section class="chapter" id="ch1" data-chapter="1">
+  <div class="chapter-icon">🌸</div>
+  <div class="chapter-num display">Chapter One</div>
+  <h2 class="chapter-title display">The Day I Met My Chikala</h2>
+  <p class="chapter-text">I didn't know a single hello could change so much. From that day, you became the person my thoughts kept wandering back to — the beginning of every good thing that followed. <span class="rose-bloom">🌹</span></p>
+</section>
+
+<section class="chapter" id="ch2" data-chapter="2">
+  <div class="chapter-icon">😊</div>
+  <div class="chapter-num display">Chapter Two</div>
+  <h2 class="chapter-title display">Why I Smile</h2>
+  <p class="chapter-text">I smile because somewhere, you exist. Because you call me Chikala like it's the softest word you know. Because being loved by you turned ordinary days into ones worth remembering.</p>
+</section>
+
+<section class="chapter" id="ch3" data-chapter="3">
+  <div class="chapter-icon">💭</div>
+  <div class="chapter-num display">Chapter Three</div>
+  <h2 class="chapter-title display">Why I Miss You</h2>
+  <p class="chapter-text">I miss your voice, your laugh,your smooth touching, touching your mufyadada, the little moments that meant nothing to anyone else but everything to me. Distance has a way of showing you exactly what — and who — matters most.</p>
+</section>
+
+<section class="chapter" id="ch4" data-chapter="4">
+  <div class="chapter-icon">🌙</div>
+  <div class="chapter-num display">Chapter Four</div>
+  <h2 class="chapter-title display">This Holiday Feels Longer Without You</h2>
+  <p class="chapter-text">We're only two days apart but manja yanga yavutika mqningi che.</p>
+</section>
+
+<section class="chapter" id="ch5" data-chapter="5">
+  <div class="chapter-icon">✨</div>
+  <div class="chapter-num display">Chapter Five</div>
+  <h2 class="chapter-title display">Our Future</h2>
+  <p class="chapter-text">I think about the years ahead and I keep picturing you in them — your laugh in my quiet moments, your name in my plans. Whatever comes next, I want it to include you.</p>
+</section>
+
+<section class="chapter" id="ch6" data-chapter="6">
+  <div class="chapter-icon">🤝</div>
+  <div class="chapter-num display">Chapter Six</div>
+  <h2 class="chapter-title display">Our Promise</h2>
+  <p class="chapter-text">No distance, no holiday, no amount of time will ever change how much I care about you and know this you are mine. That's not a line — it's a promise I intend to keep.</p>
+</section>
+
+<section class="chapter" id="ch7" data-chapter="7">
+  <div class="chapter-icon">💜</div>
+  <div class="chapter-num display">Chapter Seven</div>
+  <h2 class="chapter-title display">Forever</h2>
+  <p class="chapter-text">Whatever chapters come after this one, I want to write them with you. Forever isn't a big word to me when it comes to you — it's just the honest one.</p>
+</section>
+
+<!-- ============ LOVE LETTER ============ -->
+<section id="letter-scene">
+  <h2 class="section-title display glow">A Letter For You</h2>
+  <p class="section-sub">Tap the envelope, Chikala.</p>
+  <div class="envelope-stage" id="envelope-stage">
+    <div class="envelope" id="envelope">
+      <div class="envelope-body"></div>
+      <div class="envelope-flap"></div>
+      <div class="wax-seal">💜</div>
+    </div>
+  </div>
+  <div class="letter-paper glass" id="letter-paper">
+    <div class="letter-text" id="letter-text"></div>
+  </div>
+</section>
+
+<!-- ============ GAME HUB ============ -->
+<section id="games">
+  <h2 class="section-title display glow">Play With Your Chikala</h2>
+  <p class="section-sub">Every game you finish unlocks a little more love.</p>
+  <div class="game-tabs" id="game-tabs">
+    <button class="game-tab active" data-game="rps">Rock · Paper · Scissors</button>
+    <button class="game-tab" data-game="memory">Memory Match</button>
+    <button class="game-tab" data-game="catch">Catch the Heart</button>
+    <button class="game-tab" data-game="rose">Find the Rose</button>
+    <button class="game-tab" data-game="wheel">Wheel of Messages</button>
+    <button class="game-tab" data-game="quote">Love Quotes</button>
+    <button class="game-tab" data-game="quiz">Know Your Chikala?</button>
+  </div>
+
+  <div class="game-panel glass active" id="panel-rps">
+    <div class="game-title display">Rock · Paper · Scissors</div>
+    <div class="rps-choices">
+      <button data-choice="rock">✊</button>
+      <button data-choice="paper">✋</button>
+      <button data-choice="scissors">✌️</button>
+    </div>
+    <div class="game-msg" id="rps-msg">Choose one, Chikala.</div>
+    <div class="rps-score"><span id="rps-you">You: 0</span><span id="rps-me">Chikala: 0</span></div>
+  </div>
+
+  <div class="game-panel glass" id="panel-memory">
+    <div class="game-title display">Memory Match</div>
+    <div class="game-msg" id="memory-msg">Find every pair, Chikala.</div>
+    <div class="memory-grid" id="memory-grid"></div>
+    <button class="small-btn" id="memory-reset">Shuffle again</button>
+  </div>
+
+  <div class="game-panel glass" id="panel-catch">
+    <div class="game-title display">Catch the Heart</div>
+    <div class="catch-hud"><span id="catch-score">Score: 0</span><span id="catch-time">Time: 20s</span></div>
+    <div class="catch-stage" id="catch-stage"></div>
+    <button class="small-btn primary" id="catch-start">Start</button>
+  </div>
+
+  <div class="game-panel glass" id="panel-rose">
+    <div class="game-title display">Find the Hidden Rose</div>
+    <div class="rose-diff">
+      <button class="active" data-size="4">Easy</button>
+      <button data-size="6">Medium</button>
+      <button data-size="8">Hard</button>
+    </div>
+    <div class="game-msg" id="rose-msg">Tap a tile to find the rose 🌹</div>
+    <div class="rose-grid" id="rose-grid"></div>
+  </div>
+
+  <div class="game-panel glass" id="panel-wheel">
+    <div class="game-title display">Wheel of Sweet Messages</div>
+    <div class="wheel-wrap"><div class="wheel-pointer">🔻</div><div class="wheel" id="wheel"></div></div>
+    <button class="small-btn primary wheel-btn" id="wheel-spin">Spin</button>
+    <div class="game-msg" id="wheel-msg"></div>
+  </div>
+
+  <div class="game-panel glass" id="panel-quote">
+    <div class="game-title display">Random Love Quote</div>
+    <div class="game-msg" id="quote-text" style="font-size:1.15rem;min-height:3.4em;">Tap the button for a little love, Chikala.</div>
+    <button class="small-btn primary" id="quote-btn">Give me a quote 💜</button>
+  </div>
+
+  <div class="game-panel glass" id="panel-quiz">
+    <div class="game-title display">How Well Do You Know Your man?</div>
+    <div id="quiz-body"></div>
+  </div>
+</section>
+
+<!-- ============ FINALE ============ -->
+<section id="finale">
+  <canvas class="finale-canvas" id="finale-canvas"></canvas>
+  <div id="bird-layer"></div>
+  <div class="finale-content">
+    <div class="crystal-heart" id="crystal-heart"><div class="crystal-label">Chikala ❤️ Chikala</div></div>
+    <p class="finale-text" id="finale-text-1">No holiday can keep our hearts apart. EVEN IF YOUR BED HAS MILISI KKKKK STILL I HAV MISSED YOU THE WAY YOU HAVE MISSED YOUR BED.</p>
+    <p class="finale-forever display" id="finale-forever">💜 Forever &amp; Always 💜</p>
+    <p class="finale-credit" id="finale-credit">Made with endless love by Goodluck, Salome.THE ONE I LOVE 🌹</p>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   1. UTILITIES
+   ============================================================ */
+const $ = (sel,root=document)=>root.querySelector(sel);
+const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+const rand = (min,max)=>Math.random()*(max-min)+min;
+const randInt = (min,max)=>Math.floor(rand(min,max+1));
+const pick = arr=>arr[randInt(0,arr.length-1)];
+
+function showToast(msg,duration=3200){
+  const toast = $('#toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>toast.classList.remove('show'),duration);
+}
+
+/* ============================================================
+   2. BACKGROUND GALAXY / STARFIELD / METEORS ENGINE
+   ============================================================ */
+const bgCanvas = $('#bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+function resizeCanvas(){ bgCanvas.width = innerWidth; bgCanvas.height = innerHeight; }
+resizeCanvas();
+addEventListener('resize', resizeCanvas);
+
+const STAR_COUNT = 170;
+const stars = Array.from({length:STAR_COUNT},()=>({
+  x:rand(0,bgCanvas.width), y:rand(0,bgCanvas.height*0.9),
+  r:rand(0.3,1.8), speed:rand(0.006,0.02), phase:rand(0,Math.PI*2),
+  bright:1
+}));
+
+// simple constellation links: connect a handful of nearby stars with faint lines
+const constellationPairs = [];
+for(let i=0;i<18;i++){
+  const a = randInt(0,STAR_COUNT-1);
+  const b = randInt(0,STAR_COUNT-1);
+  if(a!==b) constellationPairs.push([a,b]);
+}
+
+let meteors = [];
+function spawnMeteor(){
+  meteors.push({
+    x:rand(bgCanvas.width*0.5,bgCanvas.width), y:rand(0,bgCanvas.height*0.3),
+    vx:-rand(4,9), vy:rand(2,5), life:1
+  });
+}
+setInterval(spawnMeteor, 3800);
+
+let scrollProgress = 0; // 0 -> 1 across whole page, used to tint galaxy & moon
+function drawBackground(t){
+  bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+
+  // nebula clouds (slow moving radial gradients)
+  const nebulas = [
+    {x:bgCanvas.width*0.2,y:bgCanvas.height*0.25,r:bgCanvas.width*0.4,c:'rgba(107,43,217,0.18)'},
+    {x:bgCanvas.width*0.8,y:bgCanvas.height*0.55,r:bgCanvas.width*0.35,c:'rgba(245,168,214,0.1)'},
+    {x:bgCanvas.width*0.5,y:bgCanvas.height*0.8,r:bgCanvas.width*0.45,c:'rgba(34,8,74,0.35)'}
+  ];
+  nebulas.forEach((n,i)=>{
+    const ox = Math.sin(t*0.00008+i)*40;
+    const oy = Math.cos(t*0.00006+i)*30;
+    const g = bgCtx.createRadialGradient(n.x+ox,n.y+oy,0,n.x+ox,n.y+oy,n.r);
+    g.addColorStop(0,n.c); g.addColorStop(1,'transparent');
+    bgCtx.fillStyle = g;
+    bgCtx.fillRect(0,0,bgCanvas.width,bgCanvas.height);
+  });
+
+  // constellation lines (faint)
+  bgCtx.strokeStyle = 'rgba(180,140,255,0.12)';
+  bgCtx.lineWidth = 1;
+  constellationPairs.forEach(([a,b])=>{
+    const s1=stars[a], s2=stars[b];
+    if(Math.hypot(s1.x-s2.x,s1.y-s2.y) < 220){
+      bgCtx.beginPath(); bgCtx.moveTo(s1.x,s1.y); bgCtx.lineTo(s2.x,s2.y); bgCtx.stroke();
+    }
+  });
+
+  // stars
+  stars.forEach(s=>{
+    const twinkle = 0.5+0.5*Math.sin(t*s.speed*4+s.phase);
+    bgCtx.beginPath();
+    bgCtx.arc(s.x,s.y,s.r*s.bright,0,Math.PI*2);
+    bgCtx.fillStyle = `rgba(255,255,255,${(0.3+twinkle*0.7)*s.bright})`;
+    bgCtx.fill();
+    s.bright += (1-s.bright)*0.05; // decay hover-brighten back to normal
+  });
+
+  // meteors (meteor shower)
+  meteors.forEach(m=>{
+    bgCtx.beginPath();
+    bgCtx.moveTo(m.x,m.y);
+    bgCtx.lineTo(m.x-m.vx*8,m.y-m.vy*8);
+    bgCtx.strokeStyle = `rgba(255,255,255,${m.life})`;
+    bgCtx.lineWidth = 2;
+    bgCtx.stroke();
+    m.x+=m.vx; m.y+=m.vy; m.life-=0.02;
+  });
+  meteors = meteors.filter(m=>m.life>0);
+
+  requestAnimationFrame(drawBackground);
+}
+requestAnimationFrame(drawBackground);
+
+// brighten nearby stars on pointer move (touch-friendly hit test)
+addEventListener('pointermove', e=>{
+  stars.forEach(s=>{
+    if(Math.hypot(s.x-e.clientX,s.y-e.clientY) < 40) s.bright = 2.4;
+  });
+});
+
+/* ============================================================
+   3. DRIFT PARTICLES: roses, butterflies, fireflies, feathers, petals
+   ============================================================ */
+const floatLayer = $('#float-layer');
+const driftEmoji = ['🌹','🦋','🪶','🌸','💜'];
+function spawnDrift(){
+  const el = document.createElement('span');
+  el.className = 'drift';
+  el.textContent = pick(driftEmoji);
+  el.style.left = rand(0,100)+'%';
+  const dur = rand(12,22);
+  el.style.animationDuration = dur+'s';
+  el.style.animationDelay = rand(0,3)+'s';
+  el.style.fontSize = rand(15,30)+'px';
+  floatLayer.appendChild(el);
+  setTimeout(()=>el.remove(),(dur+3)*1000);
+}
+for(let i=0;i<12;i++) setTimeout(spawnDrift,i*700);
+setInterval(spawnDrift,1600);
+
+function spawnFirefly(){
+  const el = document.createElement('span');
+  el.className = 'drift firefly';
+  el.style.left = rand(0,100)+'%';
+  el.style.top = rand(55,95)+'%';
+  const dur = rand(5,9);
+  el.style.animationDuration = dur+'s';
+  el.style.animationName = 'fireflyMove';
+  floatLayer.appendChild(el);
+  setTimeout(()=>el.remove(),dur*1000+200);
+}
+setInterval(spawnFirefly,850);
+
+/* cursor / touch heart trail */
+let lastTrail = 0;
+function spawnTrailHeart(x,y){
+  const now = Date.now();
+  if(now-lastTrail < 90) return;
+  lastTrail = now;
+  const h = document.createElement('span');
+  h.className = 'trail-heart';
+  h.textContent = pick(['💜','✨','🌸']);
+  h.style.left = x+'px'; h.style.top = y+'px';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),950);
+}
+addEventListener('pointermove', e=>spawnTrailHeart(e.clientX,e.clientY));
+addEventListener('touchmove', e=>{
+  const t = e.touches[0]; if(t) spawnTrailHeart(t.clientX,t.clientY);
+},{passive:true});
+
+/* ============================================================
+   4. CINEMATIC INTRO SEQUENCE
+   ============================================================ */
+function runIntro(){
+  const heart = $('#intro-heart');
+  const introText = $('#intro-text');
+  const introTitle = $('#intro-title');
+  const lines = ["Some people enter your life...","...and quietly become your favorite person.","For me...","That person is you Salome, the ONE I LOVE ."];
+
+  function typeLine(text, cb){
+    introText.textContent='';
+    introText.classList.add('show');
+    let i=0;
+    const iv = setInterval(()=>{
+      introText.textContent += text[i];
+      i++;
+      if(i>=text.length){ clearInterval(iv); setTimeout(cb, 1100); }
+    }, 42);
+  }
+  function fadeOutText(cb){
+    introText.classList.remove('show');
+    setTimeout(cb, 700);
+  }
+  function playLines(idx){
+    if(idx>=lines.length){
+      setTimeout(()=>{
+        introTitle.classList.add('show');
+        setTimeout(finishIntro, 2600);
+      }, 400);
+      return;
+    }
+    typeLine(lines[idx], ()=> fadeOutText(()=> playLines(idx+1)));
+  }
+  function finishIntro(){
+    $('#intro').classList.add('fade-out');
+    setTimeout(()=>$('#intro').style.display='none', 1700);
+  }
+
+  setTimeout(()=>{ heart.classList.add('grow'); }, 500);
+  setTimeout(()=>{
+    heart.classList.add('burst');
+    playLines(0);
+  }, 3200);
+}
+runIntro();
+$('#intro-skip').addEventListener('click', ()=>{
+  $('#intro').classList.add('fade-out');
+  setTimeout(()=>$('#intro').style.display='none', 1600);
+});
+
+/* ============================================================
+   5. HERO -> smooth scroll
+   ============================================================ */
+$('#start-journey').addEventListener('click', ()=>{
+  $('#ch1').scrollIntoView({behavior:'smooth'});
+});
+
+/* ============================================================
+   6. CHAPTER + ROSE BLOOM SCROLL REVEALS, MOON COLOR SHIFT
+   ============================================================ */
+const chapterObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('in-view');
+  });
+},{threshold:0.4});
+$$('.chapter').forEach(c=>chapterObserver.observe(c));
+
+function updateMoonByScroll(){
+  const docH = document.documentElement.scrollHeight - innerHeight;
+  scrollProgress = docH>0 ? Math.min(1, scrollY/docH) : 0;
+  const moon = $('#moon');
+  // interpolate from cool white-violet to warm gold near the end
+  const warm = scrollProgress > 0.75 ? (scrollProgress-0.75)/0.25 : 0;
+  const glowColor = `rgba(${180+warm*70},${140+warm*60},255-${Math.floor(warm*120)}`; // fallback below
+  moon.style.background = `radial-gradient(circle at 35% 30%, #fff, ${warm>0.5?'#ffe3b0':'#e6d7ff'} 45%, ${warm>0.5?'#e0a465':'#b39ce0'} 100%)`;
+  moon.style.boxShadow = `0 0 60px 18px rgba(${180+Math.floor(warm*70)},${140+Math.floor(warm*40)},255,${0.5}), 0 0 140px 55px rgba(107,43,217,${0.22*(1-warm*0.5)})`;
+  requestAnimationFrame(updateMoonByScroll);
+}
+requestAnimationFrame(updateMoonByScroll);
+
+/* ============================================================
+   7. LOVE LETTER: envelope arrival, seal melt, unfold, handwriting
+   ============================================================ */
+const letterFullText = `My Dearest Chikala,
+
+We're only on the second day of 4D holiday, and somehow it already feels much longer because I miss you.
+
+I miss your smile.
+I miss your laugh.
+I miss hearing your voice.
+I miss you touching your pants everyday in class kkkkk🥰.
+
+You have become such an important part of my life that even a few days apart remind me how lucky I am to know you.
+
+Every sunrise makes me think of you.
+Every sunset reminds me that one day has passed, bringing us closer to seeing each other again and i am tired of texting you.
+
+If everything goes as planned, let's meet at Mpepa's Office on Tuesday next week we do some stupit things.
+
+I'll be waiting with the biggest smile because seeing you always makes my day brighter.
+
+Thank you for being my Chikala.`;
+
+let letterStarted = false;
+function startLetterSequence(){
+  if(letterStarted) return;
+  letterStarted = true;
+  const envelope = $('#envelope');
+  const paper = $('#letter-paper');
+  const textEl = $('#letter-text');
+
+  envelope.classList.add('arrive');
+  setTimeout(()=>{
+    envelope.addEventListener('click', openEnvelope, {once:true});
+    showToast('Tap the envelope to open it, Chikala 💜');
+  }, 1700);
+
+  function openEnvelope(){
+    envelope.classList.add('open');
+    setTimeout(()=>{
+      paper.classList.add('open');
+      typeWriter();
+    }, 900);
+  }
+
+  function typeWriter(){
+    let i = 0;
+    textEl.innerHTML = '<span class="type-cursor">&nbsp;</span>';
+    const iv = setInterval(()=>{
+      i++;
+      const shown = letterFullText.slice(0,i);
+      textEl.innerHTML = shown.replace(/\n/g,'<br>') + '<span class="type-cursor">&nbsp;</span>';
+      if(i>=letterFullText.length){
+        clearInterval(iv);
+        textEl.innerHTML = letterFullText.replace(/\n/g,'<br>') + '<span class="letter-sign">Forever yours, ❤️ Goodluck ❤️</span>';
+      }
+    }, 16);
+  }
+}
+new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) startLetterSequence(); });
+},{threshold:0.3}).observe($('#letter-scene'));
+
+/* ============================================================
+   8. UNLOCK / CELEBRATION SYSTEM (shared by games)
+   ============================================================ */
+const unlockMessages = [
+  "I miss you, Chikala.",
+  "i have missed our kisses",
+  " I Thank God for you for being you.",
+  "I'm counting the days until Tuesday.",
+  "You make every day brighter.",
+  "Your stupid little gusturesmake me smile, loves you.",
+  "Every win looks better with you in mind.",
+  "You just made my whole day, i want to hug youuu."
+];
+function celebrate(msg){
+  showToast('🎉 '+(msg || pick(unlockMessages)));
+  burstConfetti();
+}
+function burstConfetti(){
+  const emojis = ['🌹','💜','✨','🦋','⭐'];
+  for(let i=0;i<26;i++){
+    setTimeout(()=>{
+      const c = document.createElement('span');
+      c.className='drift';
+      c.style.left = rand(30,70)+'%';
+      c.style.top = '40%';
+      c.textContent = pick(emojis);
+      c.style.fontSize = rand(14,26)+'px';
+      c.style.animation = `driftUp ${rand(2,3.5)}s linear forwards`;
+      floatLayer.appendChild(c);
+      setTimeout(()=>c.remove(),4000);
+    }, i*40);
+  }
+}
+
+/* ============================================================
+   9. GAME HUB — TAB SWITCHING
+   ============================================================ */
+$$('.game-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    $$('.game-tab').forEach(t=>t.classList.remove('active'));
+    $$('.game-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    $('#panel-'+tab.dataset.game).classList.add('active');
+  });
+});
+
+/* ---- 9a. Rock Paper Scissors ---- */
+let rpsYou=0, rpsMe=0;
+const rpsBeats = {rock:'scissors',paper:'rock',scissors:'paper'};
+const rpsEmoji = {rock:'✊',paper:'✋',scissors:'✌️'};
+$$('#panel-rps .rps-choices button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const you = btn.dataset.choice;
+    const me = pick(['rock','paper','scissors']);
+    let result;
+    if(you===me) result = "you were lucky !";
+    else if(rpsBeats[you]===me){ result = `You win! ${rpsEmoji[you]} beats ${rpsEmoji[me]}`; rpsYou++; }
+    else { result = `you cant win me ! ${rpsEmoji[me]} beats ${rpsEmoji[you]}`; rpsMe++; }
+    $('#rps-msg').textContent = result;
+    $('#rps-you').textContent = 'You: '+rpsYou;
+    $('#rps-me').textContent = 'Chikala: '+rpsMe;
+    if(rpsYou===3 || rpsMe===3){
+      celebrate(rpsYou>=3 ? "missing you breast in my hands! I still love you the most." : "I win... but you already won my heart,for this i need a kiss.");
+      rpsYou=0; rpsMe=0;
+      $('#rps-you').textContent='You: 0'; $('#rps-me').textContent='Chikala: 0';
+    }
+  });
+});
+
+/* ---- 9b. Memory Match ---- */
+const memoryGrid = $('#memory-grid');
+let memoryState = { first:null, lock:false, matches:0 };
+function buildMemory(){
+  memoryGrid.innerHTML = '';
+  memoryState = { first:null, lock:false, matches:0 };
+  const symbols = ['💜','🌹','✨','🦋','💖','🌸','🔥','🎀'];
+  const deck = symbols.concat(symbols).sort(()=>Math.random()-0.5);
+  deck.forEach((sym,idx)=>{
+    const card = document.createElement('button');
+    card.className='memory-card';
+    card.dataset.symbol=sym;
+    card.dataset.idx=idx;
+    card.textContent='❔';
+    card.addEventListener('click', ()=>flipCard(card));
+    memoryGrid.appendChild(card);
+  });
+  $('#memory-msg').textContent = 'Find every pair, Chikala.';
+}
+function flipCard(card){
+  if(memoryState.lock || card.classList.contains('matched') || card.classList.contains('flipped')) return;
+  card.classList.add('flipped');
+  card.textContent = card.dataset.symbol;
+  if(!memoryState.first){ memoryState.first = card; return; }
+  memoryState.lock = true;
+  const first = memoryState.first;
+  if(first.dataset.symbol === card.dataset.symbol && first!==card){
+    first.classList.add('matched'); card.classList.add('matched');
+    memoryState.matches++;
+    memoryState.first = null; memoryState.lock = false;
+    if(memoryState.matches===8){
+      $('#memory-msg').textContent = 'You found them all!';
+      celebrate("You matched every heart — just like you matched mine, fuck you for that. love you.");
+    }
+  } else {
+    setTimeout(()=>{
+      first.classList.remove('flipped'); first.textContent='❔';
+      card.classList.remove('flipped'); card.textContent='❔';
+      memoryState.first = null; memoryState.lock = false;
+    }, 700);
+  }
+}
+buildMemory();
+$('#memory-reset').addEventListener('click', buildMemory);
+
+/* ---- 9c. Catch the Heart ---- */
+const catchStage = $('#catch-stage');
+let catchScore=0, catchActive=false, catchTimer=null, catchSpawner=null, catchSecondsLeft=20;
+function spawnCatchHeart(){
+  if(!catchActive) return;
+  const h = document.createElement('button');
+  h.className='catch-heart';
+  h.textContent = pick(['💜','🌹','💖']);
+  h.style.left = rand(4,90)+'%';
+  h.style.bottom = '0px';
+  h.style.animationDuration = rand(2.4,3.6)+'s';
+  h.addEventListener('click', ()=>{
+    catchScore++; $('#catch-score').textContent='Score: '+catchScore;
+    h.remove();
+  });
+  catchStage.appendChild(h);
+  setTimeout(()=>h.remove(), 3800);
+}
+$('#catch-start').addEventListener('click', ()=>{
+  if(catchActive) return;
+  catchActive = true; catchScore=0; catchSecondsLeft=20;
+  $('#catch-score').textContent='Score: 0';
+  catchStage.innerHTML='';
+  catchSpawner = setInterval(spawnCatchHeart, 550);
+  catchTimer = setInterval(()=>{
+    catchSecondsLeft--;
+    $('#catch-time').textContent='Time: '+catchSecondsLeft+'s';
+    if(catchSecondsLeft<=0){
+      clearInterval(catchTimer); clearInterval(catchSpawner);
+      catchActive=false;
+      celebrate(`You caught ${catchScore} hearts — but you caught mine a long time ago, Chikala.`);
+    }
+  },1000);
+});
+
+/* ---- 9d. Find the Hidden Rose ---- */
+const roseGrid = $('#rose-grid');
+let roseSize = 4;
+function buildRose(){
+  roseGrid.style.gridTemplateColumns = `repeat(${roseSize},52px)`;
+  roseGrid.innerHTML='';
+  const total = roseSize*roseSize;
+  const roseIdx = randInt(0,total-1);
+  for(let i=0;i<total;i++){
+    const tile = document.createElement('button');
+    tile.className='rose-tile';
+    tile.addEventListener('click', ()=>{
+      if(tile.classList.contains('found')) return;
+      if(i===roseIdx){
+        tile.classList.add('found'); tile.textContent='🌹';
+        $('#rose-msg').textContent = 'You found it, Chikala!';
+        celebrate("Just like that rose, my heart was never really hidden from you.");
+        setTimeout(buildRose, 1400);
+      } else {
+        tile.textContent='💨'; setTimeout(()=>tile.textContent='',500);
+      }
+    });
+    roseGrid.appendChild(tile);
+  }
+  $('#rose-msg').textContent = 'Tap a tile to find the rose 🌹';
+}
+buildRose();
+$$('.rose-diff button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('.rose-diff button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    roseSize = Number(btn.dataset.size);
+    buildRose();
+  });
+});
+
+/* ---- 9e. Wheel of Sweet Messages ---- */
+const wheelMessages = [
+  "You are my favourite thing that has ever happened.",
+  "I fell for you slowly, then all at once.",
+  "Home is wherever you are, Chikala.",
+  "You make ordinary days feel golden.",
+  "My heart still does that thing when you laugh.",
+  "I'd choose you again, every time.",
+  "You're the best decision I keep making.",
+  "Missing you is my second favourite hobby — loving you is my first."
+];
+let wheelRotation = 0;
+$('#wheel-spin').addEventListener('click', ()=>{
+  const segment = randInt(0,7);
+  const targetDeg = 360*4 + segment*45 + 22.5;
+  wheelRotation = targetDeg;
+  $('#wheel').style.transform = `rotate(${wheelRotation}deg)`;
+  $('#wheel-msg').textContent='';
+  setTimeout(()=>{
+    $('#wheel-msg').textContent = wheelMessages[segment];
+    celebrate();
+  }, 3300);
+});
+
+/* ---- 9f. Random Love Quote Generator ---- */
+const loveQuotes = [
+  "Every sunrise reminds me of your smile.",
+  "Every sunset reminds me how much I miss you.",
+  "No distance changes how much I care about you.",
+  "You are beautiful, kind, precious, and deeply loved.",
+  "I love you more than yesterday, but less than tomorrow.",
+  "Every heartbeat brings us closer to Tuesday.",
+  "You have become one of the brightest parts of my life.",
+  "Being your Chikala is my favourite title."
+];
+$('#quote-btn').addEventListener('click', ()=>{
+  $('#quote-text').textContent = pick(loveQuotes);
+});
+
+/* ---- 9g. "How Well Do You Know Your Chikala?" Quiz ---- */
+const quizQuestions = [
+  {q:"What does Goodluck miss most about Chikala?", opts:["Her smile","Random homework facts","The weather"], correct:0},
+  {q:"What does Chikala call Goodluck?", opts:["Sir","Chikala","Stranger"], correct:1},
+  {q:"Where are they planning to meet on Tuesday?", opts:["The moon","Mpepa's Office","A different country"], correct:1},
+  {q:"How does Goodluck describe the holiday without Chikala?", opts:["Fast and easy","Longer than it should feel","Unnoticed"], correct:1},
+  {q:"What's the one thing that never changes, no matter the distance?", opts:["Wifi signal","How much Goodluck cares","The weather"], correct:1}
+];
+let quizIndex = 0, quizScore = 0;
+function renderQuiz(){
+  const body = $('#quiz-body');
+  if(quizIndex >= quizQuestions.length){
+    body.innerHTML = `<p class="game-msg">You got ${quizScore} / ${quizQuestions.length} right, Chikala.</p>
+      <button class="small-btn primary" id="quiz-restart">Play again</button>`;
+    $('#quiz-restart').addEventListener('click', ()=>{ quizIndex=0; quizScore=0; renderQuiz(); });
+    celebrate("Whatever the score, you already know the real answer: I love you.");
+    return;
+  }
+  const q = quizQuestions[quizIndex];
+  body.innerHTML = `<p class="quiz-q">${q.q}</p><div class="quiz-opts"></div>`;
+  const optsWrap = $('.quiz-opts', body);
+  q.opts.forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.textContent = opt;
+    b.addEventListener('click', ()=>{
+      $$('.quiz-opts button', body).forEach(bb=>bb.disabled=true);
+      if(i===q.correct){ b.classList.add('correct'); quizScore++; }
+      else{ b.classList.add('wrong'); optsWrap.children[q.correct].classList.add('correct'); }
+      setTimeout(()=>{ quizIndex++; renderQuiz(); }, 1100);
+    });
+    optsWrap.appendChild(b);
+  });
+}
+renderQuiz();
+
+/* ============================================================
+   10. SECRET SURPRISES SCATTERED AROUND THE PAGE
+   ============================================================ */
+const secretMessages = [
+  "I miss you, Chikala.",
+  "You're my favorite person.",
+  "Thank you for being you.",
+  "I'm counting the days until Tuesday.",
+  "You make every day brighter.",
+  "Your Chikala loves you."
+];
+let secretsFound = 0;
+function placeSecrets(){
+  const tokens = ['⭐','💜','🦋','🌹','🔥','✨'];
+  const targets = $$('.chapter, #hero, #games, #letter-scene');
+  secretMessages.forEach((msg,i)=>{
+    const host = targets[i % targets.length];
+    const btn = document.createElement('button');
+    btn.className = 'secret-token';
+    btn.textContent = tokens[i % tokens.length];
+    btn.style.position='absolute';
+    btn.style.top = rand(8,88)+'%';
+    btn.style.left = rand(6,90)+'%';
+    btn.setAttribute('aria-label','secret surprise');
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if(btn.dataset.found) return;
+      btn.dataset.found = '1';
+      btn.style.opacity = '0.25';
+      secretsFound++;
+      $('#secret-counter').textContent = `💜 Secrets found: ${secretsFound} / 6`;
+      showToast(msg, 3600);
+      burstConfetti();
+      if(secretsFound===6){
+        setTimeout(()=>showToast("You found them all, Chikala. Every hidden thing here was always you.", 4200), 1200);
+      }
+    });
+    host.style.position = host.style.position || 'relative';
+    host.appendChild(btn);
+  });
+}
+placeSecrets();
+
+/* ============================================================
+   11. AMBIENT MUSIC — pure Web Audio API (no external libraries)
+   ============================================================ */
+let audioCtx=null, musicOn=false, musicNodes=[];
+function buildAmbientMusic(){
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  const masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.05;
+  masterGain.connect(audioCtx.destination);
+
+  // soft pad: three detuned sine oscillators
+  const freqs = [261.6, 329.6, 392.0]; // C-E-G pad
+  freqs.forEach(f=>{
+    const osc = audioCtx.createOscillator();
+    osc.type='sine'; osc.frequency.value=f;
+    const g = audioCtx.createGain(); g.gain.value=0.33;
+    osc.connect(g); g.connect(masterGain);
+    osc.start();
+    musicNodes.push(osc,g);
+  });
+
+  // gentle noise bed for "nature" feel
+  const bufferSize = 2*audioCtx.sampleRate;
+  const noiseBuffer = audioCtx.createBuffer(1,bufferSize,audioCtx.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1)*0.15;
+  const noise = audioCtx.createBufferSource();
+  noise.buffer = noiseBuffer; noise.loop = true;
+  const noiseFilter = audioCtx.createBiquadFilter();
+  noiseFilter.type='lowpass'; noiseFilter.frequency.value=500;
+  const noiseGain = audioCtx.createGain(); noiseGain.gain.value=0.4;
+  noise.connect(noiseFilter); noiseFilter.connect(noiseGain); noiseGain.connect(masterGain);
+  noise.start();
+  musicNodes.push(noise,noiseFilter,noiseGain,masterGain);
+}
+$('#music-toggle').addEventListener('click', ()=>{
+  if(!musicOn){
+    if(!audioCtx) buildAmbientMusic();
+    else audioCtx.resume();
+    musicOn = true; $('#music-toggle').textContent='🔊';
+  } else {
+    audioCtx.suspend();
+    musicOn = false; $('#music-toggle').textContent='🎵';
+  }
+});
+
+/* ============================================================
+   12. GRAND FINALE — fireworks, star-text formation, crystal heart
+   ============================================================ */
+const finaleCanvas = $('#finale-canvas');
+const finaleCtx = finaleCanvas.getContext('2d');
+function resizeFinale(){
+  finaleCanvas.width = finaleCanvas.parentElement.offsetWidth;
+  finaleCanvas.height = finaleCanvas.parentElement.offsetHeight;
+}
+resizeFinale();
+addEventListener('resize', resizeFinale);
+
+let fireworks = [];
+function spawnFirework(x,y){
+  const colors=['#9b5cf6','#f5a8d6','#d9c6ff','#6c2bd9','#fff'];
+  for(let i=0;i<40;i++){
+    const angle = rand(0,Math.PI*2);
+    const speed = rand(1,4);
+    fireworks.push({
+      x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      life:1, color:pick(colors)
+    });
+  }
+}
+
+// star-text formation: sample text pixels into target points
+function getTextPoints(text,w,h,fontSize){
+  const off = document.createElement('canvas');
+  off.width=w; off.height=h;
+  const octx = off.getContext('2d');
+  octx.fillStyle='#fff';
+  octx.font = `bold ${fontSize}px Georgia, serif`;
+  octx.textAlign='center'; octx.textBaseline='middle';
+  octx.fillText(text, w/2, h/2);
+  const data = octx.getImageData(0,0,w,h).data;
+  const points = [];
+  const step = 4;
+  for(let y=0;y<h;y+=step){
+    for(let x=0;x<w;x+=step){
+      const alpha = data[(y*w+x)*4+3];
+      if(alpha>120) points.push({x,y});
+    }
+  }
+  return points;
+}
+
+let textStars = [];
+let finaleStage = 0; // 0=idle,1=fireworks,2=text-forming,3=done
+function runFinaleSequence(){
+  if(finaleStage!==0) return;
+  finaleStage = 1;
+  const w = finaleCanvas.width, h = finaleCanvas.height;
+
+  // fireworks phase
+  let fwCount = 0;
+  const fwInterval = setInterval(()=>{
+    spawnFirework(rand(w*0.2,w*0.8), rand(h*0.15,h*0.5));
+    fwCount++;
+    if(fwCount>=6){ clearInterval(fwInterval); setTimeout(startTextFormation, 900); }
+  }, 500);
+
+  function startTextFormation(){
+    finaleStage = 2;
+    const points = getTextPoints('GOODLUCK ❤ SALOME', w, Math.min(h,260), Math.max(20,w*0.045));
+    const sample = points.filter((_,i)=> i % Math.max(1,Math.floor(points.length/160)) === 0);
+    textStars = sample.map(p=>({
+      x:rand(0,w), y:rand(0,h*0.4), tx:p.x, ty:p.y+40
+    }));
+    setTimeout(()=>{
+      finaleStage = 3;
+      $('#crystal-heart').classList.add('show');
+      setTimeout(()=>$('#finale-text-1').classList.add('show'), 500);
+      setTimeout(()=>$('#finale-forever').classList.add('show'), 1600);
+      setTimeout(()=>$('#finale-credit').classList.add('show'), 2400);
+    }, 2600);
+  }
+}
+
+function drawFinale(){
+  finaleCtx.clearRect(0,0,finaleCanvas.width,finaleCanvas.height);
+
+  fireworks.forEach(f=>{
+    finaleCtx.globalAlpha = Math.max(f.life,0);
+    finaleCtx.fillStyle = f.color;
+    finaleCtx.beginPath();
+    finaleCtx.arc(f.x,f.y,2.4,0,Math.PI*2);
+    finaleCtx.fill();
+    f.x+=f.vx; f.y+=f.vy; f.vy+=0.03; f.life-=0.015;
+  });
+  finaleCtx.globalAlpha = 1;
+  fireworks = fireworks.filter(f=>f.life>0);
+
+  if(finaleStage>=2){
+    textStars.forEach(s=>{
+      s.x += (s.tx-s.x)*0.06;
+      s.y += (s.ty-s.y)*0.06;
+      finaleCtx.fillStyle = '#fff';
+      finaleCtx.shadowColor = '#d9c6ff';
+      finaleCtx.shadowBlur = 6;
+      finaleCtx.beginPath();
+      finaleCtx.arc(s.x,s.y,1.6,0,Math.PI*2);
+      finaleCtx.fill();
+    });
+    finaleCtx.shadowBlur = 0;
+  }
+
+  requestAnimationFrame(drawFinale);
+}
+requestAnimationFrame(drawFinale);
+
+new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) runFinaleSequence(); });
+},{threshold:0.35}).observe($('#finale'));
+
+/* birds flying across finale sky */
+const birdLayer = $('#bird-layer');
+function spawnBird(){
+  const b = document.createElement('span');
+  b.className='bird'; b.textContent='🕊️';
+  b.style.top = rand(8,35)+'%';
+  b.style.animationDuration = rand(14,22)+'s';
+  birdLayer.appendChild(b);
+  setTimeout(()=>b.remove(),24000);
+}
+new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ for(let i=0;i<5;i++) setTimeout(spawnBird,i*1300); } });
+},{threshold:0.3}).observe($('#finale'));
+setInterval(()=>{
+  const r = $('#finale').getBoundingClientRect();
+  if(r.top<innerHeight && r.bottom>0) spawnBird();
+},6500);
+</script>
+</body>
+</html>
